@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { UrlTableRow } from "./url-table-row";
 import { UrlTableFilter } from "./url-table-filters";
+import { Pagination } from "@/components/pagination";
 
 export function Urls() {
     return(
@@ -9,7 +10,7 @@ export function Urls() {
             <Helmet title="urls list"/>
             <div className="flex flex-col gap-4">
                 <h1 className="text-3xl font-bold tracking-tighter">List urls</h1>
-            </div>
+            
             <div className="space-y-2.5">
                 <UrlTableFilter/>
 
@@ -34,6 +35,8 @@ export function Urls() {
                             })}
                         </TableBody>
                     </Table>
+                    </div>
+                    <Pagination pageIndex={0} totalCount= {105} perPage={10}/>
                 </div>
             </div>
         </>

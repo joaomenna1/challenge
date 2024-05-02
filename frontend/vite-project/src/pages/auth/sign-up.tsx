@@ -9,7 +9,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
 import { registerUser } from '@/api/register-user'
-// import { toast } from 'sonner'
 
 
 const signUpForm = z.object({

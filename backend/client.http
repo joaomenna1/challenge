@@ -32,7 +32,7 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-    "url": "https://www.google.com/"
+    "url": "https://www.loja2.com/"
 }
 
 ###
@@ -42,4 +42,10 @@ Content-Type: application/json
 GET  {{baseUrl}}/urls?page=1
 Authorization: Bearer {{authToken}}
 
+###
+
+#   @name get_one_user
+
+GET  {{baseUrl}}/profile/me
+Authorization: Bearer {{authToken}}
 ###

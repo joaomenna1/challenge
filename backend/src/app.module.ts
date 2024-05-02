@@ -7,6 +7,7 @@ import { CreateUrlController } from './controllers/create-url.controller'
 import { envSchema } from './env'
 import { AuthModule } from './auth/auth.module'
 import { FetchRecentUrlsController } from './controllers/fetch-recent-urls.controller'
+import { GetProfileController } from './controllers/get-profile'
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { FetchRecentUrlsController } from './controllers/fetch-recent-urls.contr
     AuthenticateController,
     CreateUrlController,
     FetchRecentUrlsController,
+    GetProfileController,
   ],
   providers: [PrismaService],
 })

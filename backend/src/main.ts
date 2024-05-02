@@ -11,6 +11,7 @@ async function bootstrap() {
     origin: configService.get('BASE_URL_FRONTEND', { infer: true }),
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
+    credentials: true,
   })
   await app.listen(port)
 }

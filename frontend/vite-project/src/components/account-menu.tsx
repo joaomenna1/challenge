@@ -8,8 +8,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
+import { useQuery } from '@tanstack/react-query'
+import { getprofileUser } from '@/api/get-profile'
 
 export function AccountMenu() {
+  
+  const { data: profile } = useQuery({
+    queryKey: ['profile'], //cache
+    queryFn: getprofileUser,
+  })
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -17,16 +25,16 @@ export function AccountMenu() {
           variant="outline"
           className="flex select-none items-center gap-2"
         >
-          Tracker 
+          {profile?.name}
           <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="flex flex-col-reverse">
           <span className="text-xs font-normal text-muted-foreground">
-            joaomenna@tracker.com
+            {profile?.email}
           </span>
-          <span>Joao Menna</span>
+          <span>{profile?.name}</span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>

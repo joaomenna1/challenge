@@ -7,8 +7,8 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-    "name": "Taina grana",
-    "email": "taina@gmail.com",
+    "name": "joao menna",
+    "email": "joaomenna1@gmail.com",
     "password": "12345"
 }
 
@@ -19,7 +19,7 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-   "email": "taina@gmail.com",
+    "email": "joaomenna1@gmail.com",
     "password": "12345"
 }
 
@@ -39,7 +39,7 @@ Content-Type: application/json
 
 #   @name fetch_recent_urls
 
-GET  {{baseUrl}}/urls?page=2
+GET  {{baseUrl}}/urls?page=1
 Authorization: Bearer {{authToken}}
 
 ###

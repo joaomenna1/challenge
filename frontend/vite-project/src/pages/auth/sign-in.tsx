@@ -6,7 +6,9 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
+import { signIn } from '@/api/sign-in'
 
 
 const signInForm = z.object({
@@ -17,18 +19,35 @@ const signInForm = z.object({
 type SignInForm = z.infer<typeof signInForm>
 
 export function SignIn() {
-    const { register, handleSubmit, formState: { isSubmitting }} = useForm<SignInForm>()
+    const [searchParams] = useSearchParams()
+    const navigate = useNavigate()
+    const { register, handleSubmit, formState: { isSubmitting }} = useForm<SignInForm>({
+        defaultValues: {
+            email: searchParams.get('email') ?? ''
+        }
+    })
+
+    const {mutateAsync: authenticate} = useMutation({
+        mutationFn: signIn
+    })
 
     async function handleSignIn(data: SignInForm) {
-        console.log(data)
-        await new Promise((resolve) => setTimeout(resolve, 2000))
+        try {
+            const response = await authenticate({email: data.email, password: data.password })
 
-        toast.success('Enviamos um link de autenticação para seu e-mail', {
-            action: {
-                label: 'Reenviar',
-                onClick: () => handleSignIn(data)
+        // Verifique se o token está definido antes de usá-lo
+        if (response && response.access_token) {
+            localStorage.setItem('access_token', response.access_token);
+            toast.success('Autenticação bem-sucedida!');
+            // Redirecionar para a página do dashboard após o sucesso
+            navigate('/');
+            } else {
+                throw new Error('Token de acesso não recebido');
             }
-        })
+        } catch (error) {
+            console.log(error)
+            toast.error('Credenciais inválidas')
+        }
     }
 
     return (

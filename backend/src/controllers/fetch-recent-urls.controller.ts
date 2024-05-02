@@ -1,8 +1,10 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common'
+import { CurrentUser } from 'src/auth/current-user-decoretor'
 import { JwtAuthGuard } from 'src/auth/jwt-authGuard'
 import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { z } from 'zod'
+import { UserPayload } from 'src/auth/jwt.strategy'
 
 const pageQueryParamsSchema = z
   .string()
@@ -23,16 +25,28 @@ export class FetchRecentUrlsController {
   @Get()
   async handle(
     @Query('page', queryValidationPipe) page: PageQueryParamsSchema,
+    // @CurrentUser() user: UserPayload,
   ) {
+    // usar where: {userId: user.sub } para filtrar por url relacionando o user que a cadastrou
     const perpage = 1
+    const totalCount = await this.prisma.url.count()
     const urls = await this.prisma.url.findMany({
-      take: 5,
+      take: 10,
       skip: (page - 1) * perpage,
       orderBy: {
         createdAt: 'desc',
       },
     })
 
-    return { urls }
+    const result = {
+      list_urls: urls,
+      meta: {
+        pageIndex: page,
+        perpage: 10,
+        totalCount,
+      },
+    }
+
+    return result
   }
 }

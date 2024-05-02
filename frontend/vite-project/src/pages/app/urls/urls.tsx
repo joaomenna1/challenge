@@ -3,8 +3,34 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components
 import { UrlTableRow } from "./url-table-row";
 import { UrlTableFilter } from "./url-table-filters";
 import { Pagination } from "@/components/pagination";
+import { useQuery } from "@tanstack/react-query";
+import { getUrls } from "@/api/get-urls";
+import { useSearchParams } from "react-router-dom";
+import { z } from 'zod'
 
 export function Urls() {
+    const [searchParams, setSearchParams] = useSearchParams()
+
+
+    const pageIndex = z.coerce
+            .number()
+            .transform(page => page -1)
+            .parse(searchParams.get('page') ?? '1')
+    
+    const { data: results } = useQuery({
+        queryKey: ['urls-list', pageIndex],
+        queryFn: () => getUrls({ pageIndex: pageIndex }),
+    })
+
+    function handlePaginate(pageIndex: number) {
+        setSearchParams(state => {
+            state.set('page', (pageIndex+1).toString())
+
+            return state
+        })
+    }
+    console.log(results)
+
     return(
         <>
             <Helmet title="urls list"/>
@@ -20,7 +46,7 @@ export function Urls() {
                             <TableRow>
                                 <TableHead className="w-[64px]"></TableHead>
                                 <TableHead className="w-[140px]">Identificador</TableHead>
-                                <TableHead className="w-[180px]">Criado há</TableHead>
+                                <TableHead className="w-[180px]">Data</TableHead>
                                 <TableHead className="w-[140px]">Status</TableHead>
                                 <TableHead>Url</TableHead>
                                 <TableHead className="w-[180px]">Total de Clicks</TableHead>
@@ -28,15 +54,21 @@ export function Urls() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {Array.from({length: 10}).map((_,i) => {
-                                return (
-                                    <UrlTableRow key={i}/>
-                                )
-                            })}
+                            { results && results.list_urls.map(url => {
+                                return <UrlTableRow key={url.id} list_urls={url} />
+                            }) }
                         </TableBody>
                     </Table>
                     </div>
-                    <Pagination pageIndex={0} totalCount= {105} perPage={10}/>
+
+                    {results && (
+                        <Pagination 
+                            pageIndex={results?.meta.pageIndex}     
+                            totalCount= {results?.meta.totalCount} 
+                            perPage={results?.meta.perPage}
+                            onPageChange={handlePaginate}
+                       />
+                    )}
                 </div>
             </div>
         </>

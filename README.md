@@ -99,6 +99,96 @@ _Below is an example of how you can instruct your audience on installing and set
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+### Robo backend
+- codigo
+   ```sh
+      import { BullModule } from '@nestjs/bull';
+      import { PrismaService } from 'src/prisma/prisma.service';
+      export class UrlMonitoringModule {
+      constructor(private prisma: PrismaService) {
+            this.startMonitoring();
+      }
+
+  startMonitoring() {
+    const interval = 60000; // 1 minuto
+    setInterval(async () => {
+      const urls = await this.prisma.url.findMany();
+
+            for (const url of urls) {
+            try {
+               const response = await axios.get(url.url);
+               await this.prisma.urlStatus.create({
+                  data: {
+                  urlId: url.id,
+                  statusCode: response.status,
+                  responseBody: response.data,
+                  responseTime: new Date(),
+                  },
+               });
+            } catch (error) {
+               Logger.error(`Failed to monitor URL ${url.url}`, error);
+            }
+            }
+         }, interval);
+      }
+      }
+      ```
+
+
+### Comunicação em Tempo Real (WebSockets):
+- codigo
+   ```sh
+     import { WebSocketGateway, WebSocketServer, OnGatewayInit } from '@nestjs/websockets';
+   import { Server } from 'socket.io';
+
+      @WebSocketGateway()
+      export class UrlMonitorGateway implements OnGatewayInit {
+      @WebSocketServer()
+      server: Server;
+
+      handleMonitoringUpdate(urlId: string, statusCode: number, responseBody: string) {
+         this.server.emit('monitoringUpdate', { urlId, statusCode, responseBody });
+      }
+      }
+      ```
+
+
+### Frotend:
+- codigo
+   ```sh
+    import React, { useEffect, useState } from 'react';
+   import io from 'socket.io-client';
+   import Chart from 'chart.js/auto';
+
+   const socket = io('http://localhost:3000'); // Assumindo que o backend está rodando na porta 3000
+
+   const UrlMonitoringDashboard = () => {
+   const [monitoringData, setMonitoringData] = useState([]);
+
+   useEffect(() => {
+      socket.on('monitoringUpdate', (data) => {
+         setMonitoringData((prevData) => [...prevData, data]);
+      });
+
+      return () => {
+         socket.off('monitoringUpdate');
+      };
+   }, []);
+
+   return (
+      <div>
+         <h2>Monitoramento de URLs</h2>
+         <div id="chart">
+         {/* Renderize seu gráfico com os dados em `monitoringData` */}
+         </div>
+      </div>
+   );
+   };
+
+   export default UrlMonitoringDashboard;
+
+      ```
+
 
 
 <!-- CONTRIBUTING -->

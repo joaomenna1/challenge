@@ -8,6 +8,7 @@ import { envSchema } from './env'
 import { AuthModule } from './auth/auth.module'
 import { FetchRecentUrlsController } from './controllers/fetch-recent-urls.controller'
 import { GetProfileController } from './controllers/get-profile'
+import { BullModule } from '@nestjs/bull'
 
 @Module({
   imports: [
@@ -16,6 +17,9 @@ import { GetProfileController } from './controllers/get-profile'
       isGlobal: true,
     }),
     AuthModule,
+    BullModule.registerQueue({
+      name: 'url-monitoring',
+    }),
   ],
   controllers: [
     CreateAccountController,

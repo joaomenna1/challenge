@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module'
 import { FetchRecentUrlsController } from './controllers/fetch-recent-urls.controller'
 import { GetProfileController } from './controllers/get-profile'
 import { BullModule } from '@nestjs/bull'
+import { DeleteUrlControllerController } from './controllers/delete-url.controller.controller'
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { BullModule } from '@nestjs/bull'
     CreateUrlController,
     FetchRecentUrlsController,
     GetProfileController,
+    DeleteUrlControllerController,
   ],
   providers: [PrismaService],
 })

@@ -14,7 +14,7 @@ import { getprofileUser } from '@/api/get-profile'
 export function AccountMenu() {
   
   const { data: profile } = useQuery({
-    queryKey: ['profile'], //cache
+    queryKey: ['profile'], 
     queryFn: getprofileUser,
   })
 

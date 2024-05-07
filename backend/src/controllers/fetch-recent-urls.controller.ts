@@ -1,5 +1,7 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common'
+import { CurrentUser } from 'src/auth/current-user-decoretor'
 import { JwtAuthGuard } from 'src/auth/jwt-authGuard'
+import { UserPayload } from 'src/auth/jwt.strategy'
 import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { z } from 'zod'
@@ -23,12 +25,14 @@ export class FetchRecentUrlsController {
   @Get()
   async handle(
     @Query('page', queryValidationPipe) page: PageQueryParamsSchema,
-    // @CurrentUser() user: UserPayload,
+    @CurrentUser() user: UserPayload,
   ) {
-    // usar where: {userId: user.sub } para filtrar por url relacionando o user que a cadastrou
-    const perpage = 1
-    const totalCount = await this.prisma.url.count()
+    const perpage = 10
+    const totalCount = await this.prisma.url.count({
+      where: { authorId: user.sub },
+    })
     const urls = await this.prisma.url.findMany({
+      where: { authorId: user.sub },
       take: 10,
       skip: (page - 1) * perpage,
       orderBy: {
@@ -36,11 +40,20 @@ export class FetchRecentUrlsController {
       },
     })
 
+    // eslint-disable-next-line camelcase
+    const list_urls = urls.map((url) => ({
+      id: url.id,
+      urlName: url.urlName,
+      status: url.status,
+      createdAt: url.createdAt,
+    }))
+
     const result = {
-      list_urls: urls,
+      // eslint-disable-next-line camelcase
+      list_urls,
       meta: {
         pageIndex: page,
-        perpage: 10,
+        perPage: 10,
         totalCount,
       },
     }

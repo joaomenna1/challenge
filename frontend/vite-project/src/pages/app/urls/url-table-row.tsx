@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { TableCell, TableHead, TableRow } from "@/components/ui/table";
-import { UrlStatus } from "@/components/url-status";
+//import { UrlStatus } from "@/components/url-status";
 import { Search } from "lucide-react";
-import { format } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale'
 
 export interface UrlTableRowProps {
     list_urls: {
@@ -10,13 +11,15 @@ export interface UrlTableRowProps {
         urlName: string
         status:  | 'Success'| 'Bad_Request'| 'off'| 'Not_Found'
         createdAt: Date
-        updateAt: Date
-        authorId: string
     }
 }
 
 export function UrlTableRow({ list_urls }: UrlTableRowProps) {
-    const formattedDate = format(new Date(list_urls.createdAt), 'dd/MM/yyyy HH:mm:ss');
+    const formattedDate = formatDistanceToNow(new Date(list_urls.createdAt), {
+        locale: ptBR,
+        addSuffix: true
+    });
+
     return (
         <TableRow>
         <TableCell>
@@ -27,9 +30,7 @@ export function UrlTableRow({ list_urls }: UrlTableRowProps) {
         </TableCell>
         <TableCell className="font-mono text-xs font-medium">{list_urls.id}</TableCell>
         <TableCell className="text-muted-foreground" >{formattedDate}</TableCell>
-        <TableCell>
-            <UrlStatus  status={list_urls.status}/>
-        </TableCell>
+        <TableCell>OFF</TableCell>
         <TableCell className="font-medium">{list_urls.urlName}</TableCell>
         <TableCell>100</TableCell>
         <TableHead>

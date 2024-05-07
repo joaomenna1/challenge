@@ -11,25 +11,25 @@ import { z } from 'zod'
 export function Urls() {
     const [searchParams, setSearchParams] = useSearchParams()
 
-
     const pageIndex = z.coerce
-            .number()
-            .transform(page => page -1)
-            .parse(searchParams.get('page') ?? '1')
+    .number()
+    .transform((page) => page)
+    .parse(searchParams.get('page') ?? '1')
+
+    console.log("aqui o erro",pageIndex)
     
-    const { data: results } = useQuery({
-        queryKey: ['urls-list', pageIndex],
-        queryFn: () => getUrls({ pageIndex: pageIndex }),
+    const { data: result } = useQuery({
+        queryKey: ['urls', pageIndex],
+        queryFn: () => getUrls({ pageIndex }),
     })
 
     function handlePaginate(pageIndex: number) {
-        setSearchParams(state => {
-            state.set('page', (pageIndex+1).toString())
+        setSearchParams((state) => {
+            state.set('page', (pageIndex).toString())
 
             return state
         })
     }
-    console.log(results)
 
     return(
         <>
@@ -54,19 +54,19 @@ export function Urls() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            { results && results.list_urls.map(url => {
+                            { result && result.list_urls.map(url => {
                                 return <UrlTableRow key={url.id} list_urls={url} />
                             }) }
                         </TableBody>
                     </Table>
                     </div>
 
-                    {results && (
+                    {result && (
                         <Pagination 
-                            pageIndex={results?.meta.pageIndex}     
-                            totalCount= {results?.meta.totalCount} 
-                            perPage={results?.meta.perPage}
                             onPageChange={handlePaginate}
+                            pageIndex={result.meta.pageIndex}
+                            totalCount={result.meta.totalCount}
+                            perPage={result.meta.perPage}
                        />
                     )}
                 </div>

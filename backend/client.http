@@ -32,14 +32,14 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-    "url": "https://www.loja2.com/"
+    "url": "https://www.loja21.com/"
 }
 
 ###
 
 #   @name fetch_recent_urls
 
-GET  {{baseUrl}}/urls?page=1
+GET  {{baseUrl}}/urls
 Authorization: Bearer {{authToken}}
 
 ###

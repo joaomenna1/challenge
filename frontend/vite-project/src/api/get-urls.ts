@@ -8,10 +8,8 @@ export interface GetUrlsResponse {
     list_urls: {
         id: string
         urlName: string
-        status:  | 'Success'| 'Bad_Request'| 'off'| 'Not_Found'
+        status: 'off'
         createdAt: Date
-        updateAt: Date
-        authorId: string
     }[]
     meta: {
         pageIndex: number
@@ -27,7 +25,7 @@ export async function getUrls({ pageIndex }: GetUrlsQuery) {
             Authorization: `Bearer ${token}`,
         },
         params: {
-            pageIndex
+            page: pageIndex
         }
 
     }

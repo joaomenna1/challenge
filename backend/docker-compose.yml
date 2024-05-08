@@ -1,6 +1,12 @@
 version: '3.8'
 
 services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
   postgres:
     container_name: nest_clean-pg
     image: postgres
@@ -13,3 +19,7 @@ services:
       PGDATA: /data/postgres
     volumes:
       - ./data/pg:/data/postgres
+
+volumes:
+  redis-data: {}
+  pg-data: {} 

@@ -10,6 +10,9 @@ import { FetchRecentUrlsController } from './controllers/fetch-recent-urls.contr
 import { GetProfileController } from './controllers/get-profile'
 import { BullModule } from '@nestjs/bull'
 import { DeleteUrlControllerController } from './controllers/delete-url.controller.controller'
+import { UrlMonitoringController } from './controllers/url-monitoring.controller'
+import { RegisterUrlProducerSerivce } from './jobs/registerUrl-producer-service'
+import { registerUrlConsumer } from './jobs/registerUrl-consumer'
 
 @Module({
   imports: [
@@ -18,8 +21,14 @@ import { DeleteUrlControllerController } from './controllers/delete-url.controll
       isGlobal: true,
     }),
     AuthModule,
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
     BullModule.registerQueue({
-      name: 'url-monitoring',
+      name: 'url-monitor-queue',
     }),
   ],
   controllers: [
@@ -29,7 +38,8 @@ import { DeleteUrlControllerController } from './controllers/delete-url.controll
     FetchRecentUrlsController,
     GetProfileController,
     DeleteUrlControllerController,
+    UrlMonitoringController,
   ],
-  providers: [PrismaService],
+  providers: [PrismaService, RegisterUrlProducerSerivce, registerUrlConsumer],
 })
 export class AppModule {}

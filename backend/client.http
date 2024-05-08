@@ -39,7 +39,7 @@ Content-Type: application/json
 
 #   @name fetch_recent_urls
 
-GET  {{baseUrl}}/urls
+GET  {{baseUrl}}/urls?page=1
 Authorization: Bearer {{authToken}}
 
 ###
@@ -48,4 +48,22 @@ Authorization: Bearer {{authToken}}
 
 GET  {{baseUrl}}/profile/me
 Authorization: Bearer {{authToken}}
+###
+
+#   @name delete_url
+
+DELETE   {{baseUrl}}/delete-url?id=d3ef1120-c09d-4e24-b173-3039958463e1
+Authorization: Bearer {{authToken}}
+###
+
+# @name URL_MONITORING
+
+POST {{baseUrl}}/monitor
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "url": "https://pie.dev/get"
+}
+
 ###

@@ -1,21 +1,31 @@
-import { Process, Processor } from '@nestjs/bull'
+import {
+  OnQueueActive,
+  OnQueueCompleted,
+  Process,
+  Processor,
+} from '@nestjs/bull'
 import { Job } from 'bull'
-import axios from 'axios'
+import { IntervalMonitorUrlService } from './interval-monitor-url-service'
+import { dataMonitoringDTO } from './registerUrl-producer-service'
 
 @Processor('url-monitor-queue')
 export class registerUrlConsumer {
-  constructor() {}
+  constructor(private monitor: IntervalMonitorUrlService) {}
 
   @Process('url-monitor-job')
-  async handleUrlMonitoring(job: Job) {
-    const { data } = job
-    setInterval(async () => {
-      try {
-        const response = await axios.get(data)
-        console.log(response)
-      } catch (error) {
-        console.log(`Failed to monitor URL ${data}`, error)
-      }
-    }, 3000)
+  handleUrlMonitoring(job: Job<dataMonitoringDTO>) {
+    if (job.data) {
+      this.monitor.handleInterval(job.data)
+    }
+  }
+
+  @OnQueueCompleted()
+  oncCompleted(job: Job) {
+    console.log(`On Completed ${job.data}`)
+  }
+
+  @OnQueueActive()
+  onQueueActive(job: Job) {
+    console.log(`On active ${job.data}`)
   }
 }

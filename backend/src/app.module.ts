@@ -13,6 +13,8 @@ import { DeleteUrlControllerController } from './controllers/delete-url.controll
 import { UrlMonitoringController } from './controllers/url-monitoring.controller'
 import { RegisterUrlProducerSerivce } from './jobs/registerUrl-producer-service'
 import { registerUrlConsumer } from './jobs/registerUrl-consumer'
+import { IntervalMonitorUrlService } from './jobs/interval-monitor-url-service'
+import { RedisServices } from './config/redis'
 
 @Module({
   imports: [
@@ -40,6 +42,12 @@ import { registerUrlConsumer } from './jobs/registerUrl-consumer'
     DeleteUrlControllerController,
     UrlMonitoringController,
   ],
-  providers: [PrismaService, RegisterUrlProducerSerivce, registerUrlConsumer],
+  providers: [
+    PrismaService,
+    RedisServices,
+    RegisterUrlProducerSerivce,
+    registerUrlConsumer,
+    IntervalMonitorUrlService,
+  ],
 })
 export class AppModule {}

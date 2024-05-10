@@ -30,7 +30,7 @@ model Url {
   status    String? 
   createdAt DateTime @default(now()) @map("created_at")
   updateAt  DateTime? @updatedAt  @map("updated_at")
-  authorId  String  @map("author_id")
+  authorId  String @map("author_id")
 
   author User @relation(fields: [authorId], references: [id])
 

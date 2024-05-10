@@ -8,7 +8,6 @@ import { UserPayload } from 'src/auth/jwt.strategy'
 
 const createUrlBodySchema = z.object({
   url: z.string().url(),
-  userId: z.string().uuid(),
 })
 
 const bodyValidationPipe = new ZodValidationPipe(createUrlBodySchema)
@@ -25,8 +24,11 @@ export class UrlMonitoringController {
     @Body(bodyValidationPipe) body: CreateUrlBodySchema,
     @CurrentUser() user: UserPayload,
   ) {
-    body = { url: body.url, userId: user.sub }
-    await this.service.registerUrlMonitor(body)
+    const response = {
+      ...body,
+      userId: user.sub,
+    }
+    await this.service.registerUrlMonitor(response)
 
     return { message: `URL ${body.url} esta sendo monitorada` }
   }

@@ -15,6 +15,7 @@ import { RegisterUrlProducerSerivce } from './jobs/registerUrl-producer-service'
 import { registerUrlConsumer } from './jobs/registerUrl-consumer'
 import { IntervalMonitorUrlService } from './jobs/interval-monitor-url-service'
 import { RedisServices } from './config/redis'
+import { RedisUrlRepository } from './cache/redis-url-repository'
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { RedisServices } from './config/redis'
     RegisterUrlProducerSerivce,
     registerUrlConsumer,
     IntervalMonitorUrlService,
+    RedisUrlRepository,
   ],
 })
 export class AppModule {}

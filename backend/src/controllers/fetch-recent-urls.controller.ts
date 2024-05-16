@@ -1,4 +1,5 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { CurrentUser } from 'src/auth/current-user-decoretor'
 import { JwtAuthGuard } from 'src/auth/jwt-authGuard'
 import { UserPayload } from 'src/auth/jwt.strategy'
@@ -19,6 +20,7 @@ type PageQueryParamsSchema = z.infer<typeof pageQueryParamsSchema>
 
 @Controller('/urls')
 @UseGuards(JwtAuthGuard)
+@ApiTags('url')
 export class FetchRecentUrlsController {
   constructor(private prisma: PrismaService) {}
 

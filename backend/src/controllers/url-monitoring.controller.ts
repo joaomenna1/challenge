@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { RegisterUrlProducerSerivce } from 'src/jobs/registerUrl-producer-service'
 import { CurrentUser } from 'src/auth/current-user-decoretor'
 import { UserPayload } from 'src/auth/jwt.strategy'
+import { ApiTags } from '@nestjs/swagger'
 
 const createUrlBodySchema = z.object({
   url: z.string().url(),
@@ -16,6 +17,7 @@ type CreateUrlBodySchema = z.infer<typeof createUrlBodySchema>
 
 @Controller('/monitor')
 @UseGuards(JwtAuthGuard)
+@ApiTags('tracking')
 export class UrlMonitoringController {
   constructor(private readonly service: RegisterUrlProducerSerivce) {}
 

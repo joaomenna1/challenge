@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { INestApplication, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { PrismaService } from './prisma/prisma.service'
 import { CreateAccountController } from './controllers/create-account.controller'
@@ -16,6 +16,7 @@ import { registerUrlConsumer } from './jobs/registerUrl-consumer'
 import { IntervalMonitorUrlService } from './jobs/interval-monitor-url-service'
 import { RedisServices } from './config/redis'
 import { RedisUrlRepository } from './cache/redis-url-repository'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
 @Module({
   imports: [
@@ -52,4 +53,18 @@ import { RedisUrlRepository } from './cache/redis-url-repository'
     RedisUrlRepository,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  static configureSwagger(app: INestApplication) {
+    const options = new DocumentBuilder()
+      .setTitle('Sistema de rastreamento')
+      .setDescription(
+        'O sistema é um sistema de rastreamento de status de websites',
+      )
+      .setVersion('1.0')
+      .build()
+
+    const document = SwaggerModule.createDocument(app, options)
+
+    SwaggerModule.setup('api', app, document)
+  }
+}

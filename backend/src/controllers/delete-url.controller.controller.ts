@@ -5,6 +5,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { CurrentUser } from 'src/auth/current-user-decoretor'
 import { JwtAuthGuard } from 'src/auth/jwt-authGuard'
 import { UserPayload } from 'src/auth/jwt.strategy'
@@ -12,6 +13,7 @@ import { PrismaService } from 'src/prisma/prisma.service'
 
 @Controller('/delete-url')
 @UseGuards(JwtAuthGuard)
+@ApiTags('url')
 export class DeleteUrlControllerController {
   constructor(private prisma: PrismaService) {}
 

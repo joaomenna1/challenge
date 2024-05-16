@@ -18,7 +18,6 @@ export class IntervalMonitorUrlService {
 
         if (existUrl) {
           const urls = await this.repository.findMany(jobData.userId)
-          console.log(urls)
 
           for (const url of urls.items) {
             try {

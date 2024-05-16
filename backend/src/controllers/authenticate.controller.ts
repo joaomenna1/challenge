@@ -6,7 +6,9 @@ import {
   UsePipes,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { ApiBody, ApiTags } from '@nestjs/swagger'
 import { compare } from 'bcryptjs'
+import { AuthenticateUserDto } from 'src/dto/AuthenticateUserDto'
 import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { z } from 'zod'
@@ -19,6 +21,7 @@ const authenticateBodySchema = z.object({
 type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>
 
 @Controller('/sessions')
+@ApiTags('user')
 export class AuthenticateController {
   constructor(
     private prisma: PrismaService,
@@ -27,6 +30,10 @@ export class AuthenticateController {
 
   @Post()
   @UsePipes(new ZodValidationPipe(authenticateBodySchema))
+  @ApiBody({
+    description: 'Autenticar um usuário',
+    type: AuthenticateUserDto,
+  })
   async handle(@Body() body: AuthenticateBodySchema) {
     const { email, password } = body
 

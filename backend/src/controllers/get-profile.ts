@@ -1,4 +1,5 @@
 import { Controller, Get, NotFoundException, UseGuards } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { CurrentUser } from 'src/auth/current-user-decoretor'
 import { JwtAuthGuard } from 'src/auth/jwt-authGuard'
 import { UserPayload } from 'src/auth/jwt.strategy'
@@ -6,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service'
 
 @Controller('/profile/me')
 @UseGuards(JwtAuthGuard)
+@ApiTags('user')
 export class GetProfileController {
   constructor(private prisma: PrismaService) {}
 
